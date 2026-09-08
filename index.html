@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="styles.css" />
     <style>
       /* Asesoría: imagen protagonista, texto más legible y acabado comercial. */
-      .advisor { min-height: 470px; position: relative; overflow: hidden; align-items: center; padding-top: 74px; padding-bottom: 74px; background: linear-gradient(112deg, #fff0a4 0%, #ffd44c 52%, #ffbd25 100%); }
+      .advisor { min-height: 520px; position: relative; overflow: hidden; align-items: center; padding-top: 74px; padding-bottom: 74px; background: linear-gradient(112deg, #fff0a4 0%, #ffd44c 52%, #ffbd25 100%); }
       .advisor:before, .advisor:after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; }
       .advisor:before { width: 470px; height: 470px; right: 22%; top: -330px; border: 34px solid #fff7d466; }
       .advisor:after { width: 220px; height: 220px; left: -76px; bottom: -130px; background: #ffec9675; }
@@ -21,11 +21,11 @@
       .advisor h2 { max-width: 590px; font-size: clamp(48px, 4.8vw, 72px); line-height: .94; letter-spacing: -2.7px; text-shadow: 0 3px 0 #ffffff52; }
       .advisor > div:first-child > p:not(.eyebrow) { max-width: 620px; font-size: 20px; line-height: 1.52; font-weight: 600; color: #3a311b; margin: 24px 0 31px; }
       .advisor .button { padding: 19px 26px; border-radius: 15px; font-size: 16px; box-shadow: 0 11px 0 #bf263a33, 0 14px 25px #9f522d30; }
-      .advisor-bubble.advisor-photo { width: min(480px, 36vw); min-width: 420px; height: 330px; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 7px solid #fff; border-radius: 31px; background: #fff; transform: rotate(2deg); box-shadow: 16px 18px 0 #ea9c1933, 0 20px 45px #65380f42; }
+      .advisor-bubble.advisor-photo { position: absolute; top: 0; right: max(2vw, 30px); bottom: 0; width: min(650px, 48vw); min-width: 500px; height: auto; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 8px solid #fff; border-radius: 38px 0 38px 0; background: #fff; transform: none; box-shadow: 18px 18px 0 #ea9c1933, 0 24px 48px #65380f42; }
       .advisor-bubble.advisor-photo:after { content: "TU PRÓXIMO PASO"; position: absolute; right: 19px; top: 18px; border-radius: 999px; background: #0867eb; color: #fff; padding: 9px 13px; font: 900 12px Outfit, sans-serif; letter-spacing: .8px; box-shadow: 0 7px 14px #003b8a55; }
-      .advisor-bubble.advisor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 27%; display: block; transform: scale(1.22); }
-      @media (max-width: 900px) { .advisor { min-height: 0; gap: 28px; }.advisor h2 { font-size: clamp(42px, 6vw, 60px); }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { min-width: 340px; width: 43vw; height: 290px; }.advisor-bubble.advisor-photo img { transform: scale(1.18); } }
-      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { font-size: 10px; } }
+      .advisor-bubble.advisor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 23%; display: block; transform: scale(1.12); }
+      @media (max-width: 900px) { .advisor { min-height: 430px; gap: 28px; }.advisor h2 { font-size: clamp(42px, 6vw, 60px); }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { right: 20px; width: 46vw; min-width: 360px; }.advisor-bubble.advisor-photo img { transform: scale(1.12); } }
+      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { position: relative; top: auto; right: auto; bottom: auto; width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { font-size: 10px; } }
     </style>
     <style>
       /* Refuerzo comercial para las dos franjas superiores. */
