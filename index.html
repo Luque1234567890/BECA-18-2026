@@ -27,12 +27,25 @@
       /* Pie de página más visible y con la marca adjunta por el usuario. */
       .footer-logo { display: block; width: 210px; min-width: 210px; }
       .footer-logo img { display: block; width: 100%; height: auto; }
+      /* Navegación con marca y accesos destacados por color. */
+      .header-logo { display: block; width: 215px; min-width: 215px; }
+      .header-logo img { display: block; width: 100%; height: auto; }
+      .nav { gap: 15px; }
+      .nav a:not(.nav-cta) { padding: 12px 17px; border: 2px solid currentColor; border-radius: 12px; font-size: 17px; line-height: 1; transition: transform .2s, box-shadow .2s; }
+      .nav a:not(.nav-cta):hover { transform: translateY(-3px); }
+      .nav a:nth-child(1) { color: #0867eb; background: #e9f3ff; box-shadow: 0 5px 0 #0867eb2b; animation: navGlowBlue 2.6s ease-in-out infinite; }
+      .nav a:nth-child(2) { color: #d37700; background: #fff4ce; box-shadow: 0 5px 0 #f1a90a2b; animation: navGlowGold 2.6s ease-in-out .45s infinite; }
+      .nav a:nth-child(3) { color: #c81d4d; background: #ffe9ef; box-shadow: 0 5px 0 #e938672b; animation: navGlowRed 2.6s ease-in-out .9s infinite; }
+      @keyframes navGlowBlue { 50% { box-shadow: 0 7px 17px #0867eb66; } }
+      @keyframes navGlowGold { 50% { box-shadow: 0 7px 17px #e9a20070; } }
+      @keyframes navGlowRed { 50% { box-shadow: 0 7px 17px #e62b5d70; } }
+      @media (prefers-reduced-motion: reduce) { .nav a:not(.nav-cta) { animation: none; } }
       .footer-top > p { max-width: 330px; font-size: 18px; line-height: 1.45; font-weight: 600; }
       .footer-top > div { font-size: 16px; font-weight: 700; gap: 28px; }
       .legal { max-width: 980px; font-size: 15px; line-height: 1.65; font-weight: 600; }
       .copyright { font-size: 14px; }
       @media (max-width: 900px) { .advisor { min-height: 430px; gap: 28px; }.advisor h2 { font-size: clamp(42px, 6vw, 60px); }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { right: 20px; width: 46vw; min-width: 360px; }.advisor-bubble.advisor-photo img { transform: scale(1.12); } }
-      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { position: relative; top: auto; right: auto; bottom: auto; width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { left: 16px; bottom: 16px; min-width: 180px; padding: 15px 18px; font-size: 17px; }.footer-logo { width: 180px; min-width: 0; }.footer-top > p { font-size: 16px; }.footer-top > div { font-size: 14px; }.legal { font-size: 14px; }.copyright { font-size: 13px; } }
+      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { position: relative; top: auto; right: auto; bottom: auto; width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { left: 16px; bottom: 16px; min-width: 180px; padding: 15px 18px; font-size: 17px; }.footer-logo { width: 180px; min-width: 0; }.header-logo { width: 175px; min-width: 0; }.footer-top > p { font-size: 16px; }.footer-top > div { font-size: 14px; }.legal { font-size: 14px; }.copyright { font-size: 13px; } }
     </style>
     <style>
       /* Refuerzo comercial para las dos franjas superiores. */
@@ -64,7 +77,7 @@
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <div class="campaign-bar"><span>CONVOCATORIA 2026</span><p>Empieza con orientación gratuita. <strong>Sin tarjeta y a tu ritmo.</strong></p><a href="analizar-perfil.html">COMENZAR GRATIS →</a></div>
     <header class="site-header">
-      <a class="brand" href="#inicio" aria-label="Impulsa Beca 18, inicio"><span class="brand-mark">i</span><span>impulsa<br /><strong>beca 18</strong></span></a>
+      <a class="brand header-logo" href="#inicio" aria-label="Impulsa Beca 18, inicio"><img src="assets/impulsa-beca18-footer.png" alt="Impulsa Beca 18" /></a>
       <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
       <nav class="nav" aria-label="Navegación principal">
         <a href="#herramientas">Herramientas</a><a href="#preparacion">Preparación</a><a href="#asesoria">Asesoría</a>
