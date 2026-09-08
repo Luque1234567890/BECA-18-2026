@@ -24,8 +24,15 @@
       .advisor-bubble.advisor-photo { position: absolute; top: 0; right: max(2vw, 30px); bottom: 0; width: min(650px, 48vw); min-width: 500px; height: auto; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 8px solid #fff; border-radius: 38px 0 38px 0; background: #fff; transform: none; box-shadow: 18px 18px 0 #ea9c1933, 0 24px 48px #65380f42; }
       .advisor-bubble.advisor-photo:after { content: "TU PRÓXIMO\A PASO"; white-space: pre; position: absolute; left: 24px; bottom: 24px; min-width: 220px; padding: 19px 24px; border: 3px solid #ffffffb8; border-radius: 18px; background: linear-gradient(135deg, #087cff, #0648b2); color: #fff; font: 900 20px/1.05 Outfit, sans-serif; letter-spacing: .5px; text-align: left; box-shadow: 0 13px 0 #002c7042, 0 18px 30px #001f5c70; }
       .advisor-bubble.advisor-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 23%; display: block; transform: scale(1.12); }
+      /* Pie de página más visible y con la marca adjunta por el usuario. */
+      .footer-logo { display: block; width: 210px; min-width: 210px; }
+      .footer-logo img { display: block; width: 100%; height: auto; }
+      .footer-top > p { max-width: 330px; font-size: 18px; line-height: 1.45; font-weight: 600; }
+      .footer-top > div { font-size: 16px; font-weight: 700; gap: 28px; }
+      .legal { max-width: 980px; font-size: 15px; line-height: 1.65; font-weight: 600; }
+      .copyright { font-size: 14px; }
       @media (max-width: 900px) { .advisor { min-height: 430px; gap: 28px; }.advisor h2 { font-size: clamp(42px, 6vw, 60px); }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { right: 20px; width: 46vw; min-width: 360px; }.advisor-bubble.advisor-photo img { transform: scale(1.12); } }
-      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { position: relative; top: auto; right: auto; bottom: auto; width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { left: 16px; bottom: 16px; min-width: 180px; padding: 15px 18px; font-size: 17px; } }
+      @media (max-width: 560px) { .advisor { padding-top: 64px; padding-bottom: 64px; }.advisor .eyebrow { font-size: 12px; }.advisor h2 { font-size: 46px; }.advisor > div:first-child > p:not(.eyebrow) { font-size: 18px; }.advisor-bubble.advisor-photo { position: relative; top: auto; right: auto; bottom: auto; width: 100%; min-width: 0; height: 300px; margin-top: 38px; transform: rotate(0); }.advisor-bubble.advisor-photo img { transform: scale(1.14); }.advisor-bubble.advisor-photo:after { left: 16px; bottom: 16px; min-width: 180px; padding: 15px 18px; font-size: 17px; }.footer-logo { width: 180px; min-width: 0; }.footer-top > p { font-size: 16px; }.footer-top > div { font-size: 14px; }.legal { font-size: 14px; }.copyright { font-size: 13px; } }
     </style>
     <style>
       /* Refuerzo comercial para las dos franjas superiores. */
@@ -108,7 +115,7 @@
 
       <section class="final-cta"><p class="eyebrow">TU CAMINO PUEDE EMPEZAR HOY</p><h2>Descubre qué pasos puedes dar para acercarte a tus metas.</h2><a class="button gold" href="analizar-perfil.html">ANALIZA TU PERFIL GRATIS →</a></section>
     </main>
-    <footer><div class="footer-top"><a class="brand" href="#inicio"><span class="brand-mark">i</span><span>impulsa<br /><strong>beca 18</strong></span></a><p>Una plataforma para orientarte y prepararte con propósito.</p><div><a href="proximamente.html">Términos y condiciones</a><a href="proximamente.html">Política de privacidad</a></div></div><p class="legal">Plataforma educativa privada e independiente. No pertenece, representa ni está afiliada a PRONABEC, al Ministerio de Educación ni al Estado peruano.</p><p class="copyright">© 2026 Impulsa Beca 18. Todos los derechos reservados.</p></footer>
+    <footer><div class="footer-top"><a class="brand footer-logo" href="#inicio" aria-label="Impulsa Beca 18, inicio"><img src="assets/impulsa-beca18-footer.png" alt="Impulsa Beca 18" /></a><p>Una plataforma para orientarte y prepararte con propósito.</p><div><a href="proximamente.html">Términos y condiciones</a><a href="proximamente.html">Política de privacidad</a></div></div><p class="legal">Plataforma educativa privada e independiente. No pertenece, representa ni está afiliada a PRONABEC, al Ministerio de Educación ni al Estado peruano.</p><p class="copyright">© 2026 Impulsa Beca 18. Todos los derechos reservados.</p></footer>
     <nav class="mobile-nav" aria-label="Navegación móvil"><a class="active" href="#inicio">⌂<span>Inicio</span></a><a href="#preparacion">▣<span>Preparación</span></a><a href="proximamente.html">◴<span>Simulacros</span></a><a href="proximamente.html">↗<span>Progreso</span></a><a href="proximamente.html">◉<span>Mi cuenta</span></a></nav>
     <script src="app.js"></script>
   </body>
