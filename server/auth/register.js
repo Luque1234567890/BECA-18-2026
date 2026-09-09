@@ -13,7 +13,10 @@ export default api(async request => {
     await client.query('BEGIN');
     const user = await client.query('INSERT INTO users (first_name,last_name,email,phone,password_hash,role) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id,first_name,last_name,email,phone,role', [firstName, lastName, email, mobile, passwordHash, role]);
     await client.query('INSERT INTO profiles (user_id,department,province,district) VALUES ($1,$2,$3,$4)', [user.rows[0].id, department, province, district]);
+    // Valida la clave de sesión antes de confirmar los datos: si falta o es
+    // insegura, la transacción completa se revierte en vez de dejar un usuario.
+    const session = signSession(user.rows[0]);
     await client.query('COMMIT');
-    return json({ user: user.rows[0] }, 201, { 'set-cookie': cookie(signSession(user.rows[0])) });
+    return json({ user: user.rows[0] }, 201, { 'set-cookie': cookie(session) });
   } catch (cause) { await client.query('ROLLBACK'); if (cause.code === '23505') return json({ error: 'Este correo ya está registrado.' }, 409); throw cause; } finally { client.release(); }
 });
