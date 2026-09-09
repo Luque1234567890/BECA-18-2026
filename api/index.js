@@ -26,9 +26,31 @@ const routes = new Map([
   ['/api/progress', progress], ['/api/study-plan', studyPlan]
 ]);
 
-export default async function handler(request) {
+function requestBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', chunk => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
+}
+
+// Vercel ejecuta las funciones Node con req/res. Los módulos de la aplicación
+// usan la API web Request/Response, por lo que este borde las adapta.
+export default async function handler(req, res) {
+  const host = req.headers.host || 'localhost';
+  const protocol = req.headers['x-forwarded-proto'] || 'https';
+  const body = ['GET', 'HEAD'].includes(req.method) ? undefined : await requestBody(req);
+  const request = new Request(`${protocol}://${host}${req.url}`, {
+    method: req.method,
+    headers: req.headers,
+    body: body?.length ? body : undefined
+  });
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/api';
   const route = routes.get(path);
-  if (route) return route(request);
-  return new Response(JSON.stringify({ error: 'Ruta no encontrada.' }), { status: 404, headers: { 'content-type': 'application/json; charset=utf-8' } });
+  const response = route
+    ? await route(request)
+    : new Response(JSON.stringify({ error: 'Ruta no encontrada.' }), { status: 404, headers: { 'content-type': 'application/json; charset=utf-8' } });
+  response.headers.forEach((value, key) => res.setHeader(key, value));
+  res.status(response.status).send(Buffer.from(await response.arrayBuffer()));
 }
