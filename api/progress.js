@@ -1,0 +1,2 @@
+import { api, json, query, requireUser } from './_lib.js';
+export default api(async request => { const user = requireUser(request); const data = await query("SELECT count(*) FILTER (WHERE kind='diagnostic') AS diagnostics,count(*) FILTER (WHERE kind='simulator') AS simulators,COALESCE(round(avg(score),2),0) AS average_score,COALESCE(max(score),0) AS best_score FROM assessment_attempts WHERE user_id=$1", [user.sub]); return json({ progress: data.rows[0] }); });

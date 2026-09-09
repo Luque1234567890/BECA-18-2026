@@ -1,0 +1,4 @@
+import { readdir, readFile } from 'node:fs/promises'; import { spawnSync } from 'node:child_process'; import { join } from 'node:path';
+async function files(dir){const entries=await readdir(dir,{withFileTypes:true});return (await Promise.all(entries.map(e=>e.isDirectory()?files(join(dir,e.name)):e.name.endsWith('.js')?[join(dir,e.name)]:[]))).flat()}
+const targets=[...(await files('api')),...(await readdir('.')).filter(file=>file.endsWith('.js'))];for(const file of targets){const result=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});if(result.status!==0){console.error(result.stderr);process.exit(result.status||1)}}
+for(const file of ['index.html','mi-cuenta.html','admin.html','preparacion.html','restablecer-contrasena.html']){const content=await readFile(file,'utf8');if(!content.includes('<!doctype html>'))throw Error(`${file}: falta doctype`)}console.log(`Lint correcto: ${targets.length} archivos JavaScript y 5 páginas HTML.`);

@@ -1,0 +1,2 @@
+import { api, json, query, requireUser } from '../_lib.js';
+export default api(async request => { const user = requireUser(request); await query("UPDATE subscriptions SET status='expired' WHERE user_id=$1 AND status='active' AND end_date<NOW()", [user.sub]); const result = await query("SELECT id,plan,end_date FROM subscriptions WHERE user_id=$1 AND status='active' AND end_date >= NOW() ORDER BY end_date DESC LIMIT 1", [user.sub]); return json({ allowed: Boolean(result.rows[0]), membership: result.rows[0] || null }); });

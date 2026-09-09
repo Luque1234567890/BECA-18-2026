@@ -1,12 +1,58 @@
-# Impulsa Beca 18 — Fase 1
+# Impulsa Beca 18 — Membresías y pagos sandbox
 
-Landing page móvil para orientación y preparación académica digital de postulantes a Beca 18 – 2026. Esta entrega implementa únicamente la Fase 1: identidad visual, portada, herramientas gratuitas, planes comerciales, navegación responsive y pantallas temporales.
+Plataforma educativa privada e independiente. No pertenece, representa ni está afiliada a PRONABEC, al Ministerio de Educación ni al Estado peruano.
 
-## Publicación en GitHub y Vercel
+## Alcance de esta fase
 
-1. Crea un repositorio vacío en GitHub llamado, por ejemplo, `impulsa-beca18`.
-2. Desde esta carpeta, inicializa Git, confirma los archivos y conecta el repositorio remoto.
-3. En Vercel, importa ese repositorio. El proyecto no requiere un paso de compilación: selecciona **Other** como framework y deja vacío el directorio de salida.
-4. Vercel detectará `vercel.json` y aplicará los encabezados de seguridad básicos.
+- Registro, inicio/cierre de sesión y recuperación de contraseña.
+- PostgreSQL: usuarios, perfiles, suscripciones, pagos, ajustes y tokens de recuperación.
+- Dos únicos planes: **Preparación Básica S/39 por 30 días** y **Preparación Completa S/100 hasta la fecha de examen administrada**.
+- Checkout Pro de Mercado Pago exclusivamente preparado para sandbox.
+- Activación solo desde webhook firmado y verificado contra la API de Mercado Pago.
+- Panel de cuenta, ruta protegida de preparación y panel `/admin` con métricas/búsqueda.
 
-No hay credenciales ni servicios de pago incluidos. Las funciones de perfil, diagnóstico, autenticación, pagos y datos oficiales corresponden a fases posteriores.
+## Configuración inicial
+
+1. En Vercel Marketplace, conecte una base PostgreSQL compatible (por ejemplo, Neon o Supabase) y configure `DATABASE_URL`.
+2. Ejecute una vez el contenido de [`db-schema.sql`](db-schema.sql) en esa base.
+3. Copie `.env.example` a `.env.local` solo para desarrollo y complete las variables requeridas. Nunca suba ese archivo ni secretos al repositorio.
+4. Registre un usuario desde `/mi-cuenta`. Para promover el primer administrador, ejecute en PostgreSQL:
+
+   ```sql
+   UPDATE users SET role = 'admin' WHERE email = 'correo-del-administrador@ejemplo.com';
+   ```
+
+5. Inicie sesión con esa cuenta y abra `/admin` para registrar la fecha del examen antes de aceptar pagos del plan Completo.
+
+## Variables de entorno
+
+| Variable | Uso |
+| --- | --- |
+| `DATABASE_URL` | Cadena de conexión PostgreSQL inyectada por la integración. |
+| `APP_SESSION_SECRET` | Secreto aleatorio de al menos 32 caracteres para firmar la sesión. |
+| `ADMIN_EMAIL` | Correo que recibirá el rol administrador al registrarse por primera vez. |
+| `APP_URL` | URL pública base del proyecto, sin barra final. |
+| `MERCADOPAGO_ACCESS_TOKEN` | Access token de **prueba/sandbox** de Mercado Pago. |
+| `MERCADOPAGO_WEBHOOK_SECRET` | Clave secreta de la notificación webhook de Mercado Pago. |
+| `PAYMENT_PROVIDER` | `mercadopago` por defecto. `mock` solo permite simular pagos en local; el código lo rechaza si detecta Vercel o producción. |
+| `RESEND_API_KEY` | Opcional, para enviar enlaces de recuperación. |
+| `EMAIL_FROM` | Remitente verificado para los correos de recuperación. |
+
+## Pruebas locales
+
+Instale dependencias y ejecute:
+
+```bash
+npm install
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Para probar registro, abra `/mi-cuenta`, complete el formulario y cierre/inicie sesión. Para pago sandbox, elija uno de los dos planes desde esa misma página: el backend crea la preferencia y redirige al Checkout Pro de prueba. La redirección de regreso no activa la membresía; debe llegar el webhook firmado y el backend consulta el pago antes de activarla. El plan Completa usa inicialmente el 15/11/2026 como fecha provisional y vence al finalizar ese día en horario de Perú; el administrador puede sustituirla cuando exista cronograma oficial.
+
+Configure en Mercado Pago la URL `https://SU-DOMINIO/api/payments/webhook` y use solamente las credenciales y tarjetas de prueba de su cuenta de desarrollador.
+
+## Desarrollo sin credenciales de Mercado Pago
+
+Mientras Mercado Pago habilita el sandbox, cree un `.env` local (nunca lo suba a Git) con `PAYMENT_PROVIDER=mock`. El selector de planes mostrará una confirmación explícita para simular una aprobación local; no se contacta a Mercado Pago y esta ruta devuelve 404 en Vercel o producción.
