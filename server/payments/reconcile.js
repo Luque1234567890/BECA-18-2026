@@ -4,8 +4,19 @@ export default api(async request => {
   requireMethod(request, 'POST');
   const user = requireUser(request);
   const { paymentId } = await readJson(request);
-  if (!/^\d+$/.test(String(paymentId || ''))) return error('Pago inválido.', 422);
-  const response = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, { headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}` } });
+  let response;
+  if (paymentId) {
+    if (!/^\d+$/.test(String(paymentId))) return error('Pago inválido.', 422);
+    response = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, { headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}` } });
+  } else {
+    const pending = (await db().query("SELECT external_reference FROM payments WHERE user_id=$1 AND provider='mercadopago' AND status='pending' ORDER BY created_at DESC LIMIT 1", [user.sub])).rows[0];
+    if (!pending) return json({ reconciled: false });
+    const search = await fetch(`https://api.mercadopago.com/v1/payments/search?external_reference=${encodeURIComponent(pending.external_reference)}`, { headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}` } });
+    if (!search.ok) return error('No se pudo verificar el pago.', 502);
+    const remote = (await search.json()).results?.find(item => item.status === 'approved');
+    if (!remote) return json({ reconciled: false });
+    response = new Response(JSON.stringify(remote), { status: 200 });
+  }
   if (!response.ok) return error('No se pudo verificar el pago.', 502);
   const remote = await response.json();
   if (remote.status !== 'approved' || !remote.external_reference?.startsWith('beca18-')) return error('El pago aún no está aprobado.', 409);
