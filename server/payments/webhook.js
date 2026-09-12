@@ -1,9 +1,16 @@
 import crypto from 'node:crypto';
 import { api, db, error, json, query, requireMethod } from '../_lib.js';
-function verifySignature(request, url) { const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET; if (!secret) return false; const signature = request.headers.get('x-signature') || ''; const requestId = request.headers.get('x-request-id') || ''; const parts = Object.fromEntries(signature.split(',').map(item => item.trim().split('='))); const paymentId = new URL(url).searchParams.get('data.id') || ''; const manifest = `id:${paymentId};request-id:${requestId};ts:${parts.ts || ''};`; const expected = crypto.createHmac('sha256', secret).update(manifest).digest('hex'); const received = Buffer.from(parts.v1 || '', 'hex'); const calculated = Buffer.from(expected, 'hex'); return received.length === calculated.length && received.length > 0 && crypto.timingSafeEqual(received, calculated); }
+function verifySignature(request, paymentId) { const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET; if (!secret) return false; const signature = request.headers.get('x-signature') || ''; const requestId = request.headers.get('x-request-id') || ''; const parts = Object.fromEntries(signature.split(',').map(item => item.trim().split('='))); const manifest = `id:${paymentId || ''};request-id:${requestId};ts:${parts.ts || ''};`; const expected = crypto.createHmac('sha256', secret).update(manifest).digest('hex'); const received = Buffer.from(parts.v1 || '', 'hex'); const calculated = Buffer.from(expected, 'hex'); return received.length === calculated.length && received.length > 0 && crypto.timingSafeEqual(received, calculated); }
+
+async function getPaymentId(request) {
+  const queryId = new URL(request.url).searchParams.get('data.id');
+  if (queryId) return queryId;
+  const body = await request.clone().json().catch(() => null);
+  return body?.data?.id ? String(body.data.id) : null;
+}
 export default api(async request => {
-  requireMethod(request, 'POST'); if (!verifySignature(request, request.url)) return error('Firma de webhook inválida.', 401);
-  const paymentId = new URL(request.url).searchParams.get('data.id'); if (!paymentId || !process.env.MERCADOPAGO_ACCESS_TOKEN) return error('Notificación incompleta.', 400);
+  requireMethod(request, 'POST'); const paymentId = await getPaymentId(request); if (!verifySignature(request, paymentId)) return error('Firma de webhook inválida.', 401);
+  if (!paymentId || !process.env.MERCADOPAGO_ACCESS_TOKEN) return error('Notificación incompleta.', 400);
   const response = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, { headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}` } }); if (!response.ok) return error('No se pudo verificar el pago.', 502); const remote = await response.json(); const reference = remote.external_reference; if (!reference?.startsWith('beca18-')) return json({ ignored: true });
   const client = await db().connect();
   try { await client.query('BEGIN'); const payment = (await client.query('SELECT p.*,s.plan,s.id AS subscription_id FROM payments p JOIN subscriptions s ON s.id=p.subscription_id WHERE p.external_reference=$1 FOR UPDATE', [reference])).rows[0]; if (!payment) { await client.query('ROLLBACK'); return json({ ignored: true }); }
