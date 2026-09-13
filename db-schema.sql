@@ -24,6 +24,17 @@ CREATE TABLE profiles (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Conserva la aceptación verificable de los documentos legales por usuario.
+CREATE TABLE legal_acceptances (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  document TEXT NOT NULL CHECK (document IN ('terms', 'privacy')),
+  version TEXT NOT NULL,
+  accepted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, document, version)
+);
+CREATE INDEX legal_acceptances_user_idx ON legal_acceptances (user_id, accepted_at DESC);
+
 CREATE TABLE subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,

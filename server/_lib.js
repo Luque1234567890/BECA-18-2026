@@ -4,6 +4,7 @@ import pg from 'pg';
 const { Pool } = pg;
 let pool;
 export const PLANS = Object.freeze({ basic: { price: 39, label: 'Preparación Básica' }, complete: { price: 100, label: 'Preparación Completa' } });
+export const LEGAL_VERSION = '2026-09-13';
 
 // El simulador existe únicamente para desarrollar en una máquina local. Vercel
 // define VERCEL incluso en previsualizaciones, por lo que no puede habilitarse
@@ -16,6 +17,14 @@ export function db() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL no está configurada.');
   pool ??= new Pool({ connectionString: process.env.DATABASE_URL, ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false } });
   return pool;
+}
+export async function recordLegalAcceptance(client, userId) {
+  await client.query(
+    `INSERT INTO legal_acceptances (user_id, document, version)
+     VALUES ($1, 'terms', $2), ($1, 'privacy', $2)
+     ON CONFLICT (user_id, document, version) DO NOTHING`,
+    [userId, LEGAL_VERSION]
+  );
 }
 export const query = (text, params) => db().query(text, params);
 export const json = (body, status = 200, headers = {}) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', ...headers } });
