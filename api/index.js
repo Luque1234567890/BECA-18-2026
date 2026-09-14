@@ -1,4 +1,6 @@
 import account from '../server/account.js';
+import claims from '../server/claims.js';
+import adminClaims from '../server/admin/claims.js';
 import preparation from '../server/access/preparation.js';
 import adminExamDate from '../server/admin/exam-date.js';
 import adminOverview from '../server/admin/overview.js';
@@ -20,7 +22,8 @@ import studyPlan from '../server/study-plan.js';
 
 const routes = new Map([
   ['/api/account', account], ['/api/access/preparation', preparation],
-  ['/api/admin/exam-date', adminExamDate], ['/api/admin/overview', adminOverview], ['/api/admin/participants', adminParticipants],
+  ['/api/claims', claims],
+  ['/api/admin/claims', adminClaims], ['/api/admin/exam-date', adminExamDate], ['/api/admin/overview', adminOverview], ['/api/admin/participants', adminParticipants],
   ['/api/assessments/questions', assessmentQuestions], ['/api/assessments/submit', assessmentSubmit],
   ['/api/auth/forgot-password', forgotPassword], ['/api/auth/login', login], ['/api/auth/logout', logout], ['/api/auth/me', me], ['/api/auth/register', register], ['/api/auth/reset-password', resetPassword],
   ['/api/payments/create', createPayment], ['/api/payments/mock-approve', mockApprove], ['/api/payments/reconcile', reconcilePayment], ['/api/payments/webhook', paymentWebhook],

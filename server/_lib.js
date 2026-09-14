@@ -4,7 +4,7 @@ import pg from 'pg';
 const { Pool } = pg;
 let pool;
 export const PLANS = Object.freeze({ basic: { price: 39, label: 'Preparación Básica' }, complete: { price: 100, label: 'Preparación Completa' } });
-export const LEGAL_VERSION = '2026-09-13';
+export const LEGAL_VERSION = '2026-09-13.1';
 
 // El simulador existe únicamente para desarrollar en una máquina local. Vercel
 // define VERCEL incluso en previsualizaciones, por lo que no puede habilitarse
