@@ -13,5 +13,9 @@ export default api(async request => {
   const preference = await fetch('https://api.mercadopago.com/checkout/preferences', { method: 'POST', headers: { Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`, 'content-type': 'application/json', 'X-Idempotency-Key': idempotencyKey }, body: JSON.stringify({ items: [{ title: selected.label, quantity: 1, unit_price: selected.price, currency_id: 'PEN' }], external_reference: payment.external_reference, notification_url: `${process.env.APP_URL}/api/payments/webhook`, back_urls: { success: `${process.env.APP_URL}/mi-cuenta.html?payment=success`, failure: `${process.env.APP_URL}/mi-cuenta.html?payment=failure`, pending: `${process.env.APP_URL}/mi-cuenta.html?payment=pending` }, auto_return: 'approved' }) });
   if (!preference.ok) { console.error(await preference.text()); return error('No se pudo iniciar el pago de prueba.', 502); }
   const data = await preference.json(); await query('UPDATE payments SET provider_preference_id=$1 WHERE id=$2', [String(data.id), payment.id]);
-  return json({ paymentId: payment.id, checkoutUrl: data.sandbox_init_point || data.init_point, status: 'pending' }, 201);
+  // En producción se debe abrir el Checkout real. sandbox_init_point es solo
+  // para las pruebas con credenciales de prueba.
+  const checkoutUrl = process.env.VERCEL_ENV === 'production' ? data.init_point : (data.sandbox_init_point || data.init_point);
+  if (!checkoutUrl) return error('Mercado Pago no devolvió un enlace de pago.', 502);
+  return json({ paymentId: payment.id, checkoutUrl, status: 'pending' }, 201);
 });
